@@ -3,63 +3,53 @@ const db = require('../config/db');
 class Todo {
 
     //get all todos.
-    async getTodos(res){
+    async getTodos(){
 
         let results = await db.query(
             `SELECT * FROM todos`
         ).catch(console.log);
 
-        return res.json(results.rows);
+        //return
+        return results.rows;
     };
+    
 
-    //get a specific todo.
-    async getTodo(todoId,res){
-
-        let id = parseInt(todoId);
-
-        let result = await db.query(`SELECT * FROM todos WHERE id=${id}`)
-        .catch(console.log);
-
-        return res.json(result.rows);
-    };
+    //Rendering the home page with dynamic data.
 
     //create a todo.
-    async createTodo(todo,res){
+    async createTodo(todo){
 
         await db.query('INSERT INTO todos (title, checked) VALUES ($1, $2)',[todo.title,false])
         .catch(console.log);
 
-        return res.send({
-            success:true,
-            message:"Todo added!"
-        });
+        return;
         
     };
 
     //update a todo.
-    async updateTodo(todoId,todo,res){
+    async updateTodo(todoId){
 
-        let {title,checked} = todo;
+        //get the previous todo.
+        let original_todo = await db.query(
+            `SELECT * FROM todos WHERE id=$1`,[parseInt(todoId)]
+        ).catch(console.log);
 
-        await db.query(`UPDATE todos SET title=$1,checked=$2 WHERE id=$3`,[title,checked,parseInt(todoId)])
+        //update
+        await db.query(`UPDATE todos SET checked=$1 WHERE id=$2`,[!original_todo.rows[0].checked,parseInt(todoId)])
         .catch(console.log);
 
-        return res.send({
-            success:true,
-            message:"Todo updated"
-        })
+        return;
+
     };
 
     //delete a todo.
-    async deleteTodo(todoId,res){
-
+    async deleteTodo(todoId){
+        
+        //delete todo
         await db.query(`DELETE FROM todos WHERE id=$1`,[parseInt(todoId)])
         .catch(console.log);
 
-        return res.send({
-            success:true,
-            message:"Todo deleted"
-        });
+        return;
         
     };
 

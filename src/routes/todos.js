@@ -5,44 +5,55 @@ const router = express.Router();
 const Todo = require('../controllers/Todo');
 
 //Get all todos.
-router.get('/todos', (req,res) => {
+router.get('/', async (req,res) => {
 
-    return new Todo().getTodos(res);
+    let todos = await new Todo().getTodos();
 
-});
-
-//Get a specific todo.
-router.get('/todos/:todoId', (req,res) => {
-
-    let {todoId} = req.params;
-
-    return new Todo().getTodo(todoId,res);
+    return res.render('home',{
+        todos
+    });
 
 });
+
 
 //Create a todo.
-router.post('/todo', (req,res) => {
+router.post('/todo', async (req,res) => {
 
     let {title} = req.body;
 
-    return new Todo().createTodo({title},res);
+    await new Todo().createTodo({title},res);
+
+    return res.redirect('/')
 
 });
 
 //Update a todo.
-router.put('/todos/:todoId', (req,res) => {
+router.put('/todos/:todoId', async (req,res) => {
 
     let {todoId} = req.params;
 
-    return new Todo().updateTodo(todoId,req.body,res);
+    await new Todo().updateTodo(todoId,res);
+
+    let todos = await new Todo().getTodos();
+
+    return res.render('home',{
+        todos
+    });
+
 });
 
 //Delete a todo.
-router.delete('/todos/:todoId', (req,res) => {
+router.delete('/todos/:todoId', async (req,res) => {
 
     let {todoId} = req.params;
 
-    return new Todo().deleteTodo(todoId,res);
+    await new Todo().deleteTodo(todoId);
+
+    let todos = await new Todo().getTodos();
+
+    return res.render('home',{
+        todos
+    });
     
 });
 
