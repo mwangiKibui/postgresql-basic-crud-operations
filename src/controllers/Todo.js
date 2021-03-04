@@ -9,12 +9,8 @@ class Todo {
             `SELECT * FROM todos`
         ).catch(console.log);
 
-        //return
         return results.rows;
     };
-    
-
-    //Rendering the home page with dynamic data.
 
     //create a todo.
     async createTodo(todo){
@@ -22,8 +18,7 @@ class Todo {
         await db.query('INSERT INTO todos (title, checked) VALUES ($1, $2)',[todo.title,false])
         .catch(console.log);
 
-        return;
-        
+        return;        
     };
 
     //update a todo.
@@ -39,7 +34,6 @@ class Todo {
         .catch(console.log);
 
         return;
-
     };
 
     //delete a todo.
@@ -49,8 +43,7 @@ class Todo {
         await db.query(`DELETE FROM todos WHERE id=$1`,[parseInt(todoId)])
         .catch(console.log);
 
-        return;
-        
+        return;        
     };
 
 };
