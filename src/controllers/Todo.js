@@ -29,8 +29,10 @@ class Todo {
             `SELECT * FROM todos WHERE id=$1`,[parseInt(todoId)]
         ).catch(console.log);
 
+        let new_checked_value = !original_todo.rows[0].checked;
+
         //update
-        await db.query(`UPDATE todos SET checked=$1 WHERE id=$2`,[!original_todo.rows[0].checked,parseInt(todoId)])
+        await db.query(`UPDATE todos SET checked=$1 WHERE id=$2`,[new_checked_value,parseInt(todoId)])
         .catch(console.log);
 
         return;
